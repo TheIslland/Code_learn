@@ -10,12 +10,12 @@ using namespace std;
 template <typename Type>
 class Vector {
    public:
-    Node() {
+    Vector() {
         SIZE = 1;
         len = 0;
         data = (Type*)malloc(sizeof(Type));
     }
-    Node(int val) {
+    Vector(int val) {
         SIZE = val;
         len = 0;
         data = (Type*)malloc(sizeof(Type) * SIZE);
@@ -67,12 +67,44 @@ class Vector {
             data[i - 1] = data[i];
         }
         len--;
-        return 
+        return true;
     }
-    ~Node() { if (data) free(data); }
+    ~Vector() {
+        if (data) free(data);
+    }
+    void output() {
+        cout << " vector= [";
+        for (int i = 0; i < len; i++) {
+            cout << data[i] << "," << endl;
+        }
+        cout << "]" << endl;
+    }
+
    private:
     Type* data;
     int len, SIZE;
 };
 int main() {
+    Vector<int> a(1);
+    int m, t;
+    cin >> m;
+    for (int i = 0; i < m; i++) {
+        cin >> t;
+        int b, c;
+        if (t == 1) {
+            cin >> b >> c;
+            a.insert(b, c);
+        } else if (t == 2) {
+            cin >> b;
+            a.delete_node(b);
+        } else if (t == 3) {
+            cin >> b;
+            a.search(b);
+        } else {
+            a.output();
+        }
+    }
+    
+            a.output();
+    return 0;
 }

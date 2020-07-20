@@ -25,6 +25,7 @@ class queue {
         length = 0;
         size = num;
     }
+    ~queue() { free(data); }
     void expand() {
         Type *old = data;
         size *= 2;
@@ -41,7 +42,7 @@ class queue {
         head = 0;
         tail = length;
     }
-    bool empty() {return length == 0}
+    bool empty() { return length == 0; }
     bool push(Type val) {
         if (length == size) {
             expand();
