@@ -39,10 +39,10 @@ class thread_tree {
         head->lchild = insert(root, val);
         return;
     }
-    Node *build_thread_tree(Node *root) {
+    Node *build_inorder_thread_tree(Node *root) {
         if (!root) return NULL;
         static Node *pre = NULL;
-        root->lchild = build_thread_tree(root->lchild);
+        root->lchild = build_inorder_thread_tree(root->lchild);
         if (root->lchild == NULL) {
             root->lchild = pre;
             root->ltag = THREAD;
@@ -52,12 +52,33 @@ class thread_tree {
             pre->rtag = THREAD;
         }
         pre = root;
-        root->rchild = build_thread_tree(root->rchild);
+        root->rchild = build_inorder_thread_tree(root->rchild);
         return root;
     }
-    void build_thread() {
+    void build_inoerder_thread() {
         Node *root = head->lchild;
-        head->lchild = build_thread_tree(root);
+        head->lchild = build_inorder_thread_tree(root);
+        return;
+    }
+    Node *build_preorder_thread_tree(Node *root) {
+        if (!root) return NULL;
+        static Node *pre = NULL;
+        if (root->lchild == NULL) {
+            root->lchild = pre;
+            root->ltag = THREAD;
+        }
+        if (pre && pre->rchild == NULL) {
+            pre->rchild = root;
+            pre->rtag = THREAD;
+        }
+        pre = root;
+        if (root->ltag == NORMAL) root->lchild = build_preorder_thread_tree(root->lchild);
+        if (root->rtag == NORMAL) root->rchild = build_preorder_thread_tree(root->rchild);
+        return root;
+    }
+    void build_preorder_thread() {
+        Node *root = head->lchild;
+        head->lchild = build_preorder_thread_tree(root);
         return;
     }
     Node *most_left(Node *root) {
@@ -78,16 +99,41 @@ class thread_tree {
         }
         cout << "]" << endl;
     }
-    void output_node(Node *root) {
+    void pre_order() {
+        Node *root = head->lchild;
+        cout << "in_order output is: [ ";
+        while (root) {
+            cout << root->val << " ";
+            if (root->ltag == NORMAL) {
+                root = root->lchild;
+            } else {
+                root = root->rchild;
+            }
+        }
+        cout << "]" << endl;
+    }
+    void output_inorder_node(Node *root) {
         if (!root) return;
-        if (root->ltag == NORMAL) output_node(root->lchild);
+        if (root->ltag == NORMAL) output_inorder_node(root->lchild);
         cout << root->val << " ";
-        if (root->rtag == NORMAL) output_node(root->rchild);
+        if (root->rtag == NORMAL) output_inorder_node(root->rchild);
         return;
     }
-    void output() {
+    void output_inorder() {
         cout << "the tree output is: [ ";
-        output_node(head->lchild);
+        output_inorder_node(head->lchild);
+        cout << "]" << endl;
+    }
+    void output_preorder_node(Node *root) {
+        if (!root) return;
+        cout << root->val << " ";
+        if (root->ltag == NORMAL) output_preorder_node(root->lchild);
+        if (root->rtag == NORMAL) output_preorder_node(root->rchild);
+        return;
+    }
+    void output_preorder() {
+        cout << "the tree output is: [ ";
+        output_preorder_node(head->lchild);
         cout << "]" << endl;
     }
 
@@ -102,8 +148,9 @@ int main() {
     for (int i = 0; i < MAX_OP; i++) {
         root.push(rand() % 100);
     }
-    root.build_thread();
-    root.output();
-    root.in_order();
+    root.build_preorder_thread();
+    cout << "build successd" << endl;
+    root.output_preorder();
+    root.pre_order();
     return 0;
 }
