@@ -111,6 +111,36 @@ class AVL_tree {
         head->lchild = insert_node(root, val);
         return;
     }
+    Node *predecessor(Node *root) {
+        Node *temp = root->lchild;
+        while (temp->rchild != NIL) temp = temp->rchild;
+        return temp;
+    }
+
+    Node *erase_node(Node *root, int val) {
+        if (root == NIL) return root;
+        if (root->key > val) {
+            root->lchild = erase_node(root->lchild, val);
+        } else if (root->key < val) {
+            root->rchild = erase_node(root->rchild, val);
+        } else {
+            if (root->lchild == NIL || root->rchild == NIL) {
+                Node *temp = root->lchild == NIL ? root->rchild : root->lchild;
+                free(root);
+                return temp;
+            } else {
+                Node *temp = predecessor(root);
+                root->key = temp->key;
+                root->lchild = erase_node(root->lchild, val);
+            }
+        }
+        return maintain(root);
+    }
+    void erase(int val) {
+        Node *root = head->lchild;
+        head->lchild = erase_node(root, val);
+        return;
+    }
     void output_node(Node *root) {
         if (root == NIL) return;
         output_node(root->lchild);
