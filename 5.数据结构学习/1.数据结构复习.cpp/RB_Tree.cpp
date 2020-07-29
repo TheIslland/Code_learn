@@ -213,7 +213,7 @@ int main() {
             } break;
             case 2: {
                 printf("erase %d from red black tree!\n", val);
-                // root = erase(root, val);
+                root = erase(root, val);
             } break;
             default:
                 break;
